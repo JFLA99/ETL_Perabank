@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Crear una instancia RDS PostgreSQL en el Free Tier para PeraBank
+
+Parameters:
+  DBUsername:
+    Description: Nombre de usuario del administrador de la base de datos
+    Type: String
+    MinLength: 1
+    MaxLength: 16
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
+    ConstraintDescription: Debe comenzar con una letra y contener solo letras o números.
+
+  DBPassword:
+    Description: Contraseña del usuario administrador
+    Type: String
+    NoEcho: true
+    MinLength: 8
+    MaxLength: 41
+    ConstraintDescription: Debe tener entre 8 y 41 caracteres.
+
+  VPCId:
+    Description: ID de la VPC donde se creará el grupo de seguridad (usa la VPC por defecto)
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Permitir acceso a RDS desde tu IP
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: 0.0.0.0/0  # ⚠️ Para pruebas; reemplaza con tu IP pública si es necesario
+      VpcId: !Ref VPCId
+
+  RDSInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: perabank-db
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro  # Free Tier compatible
+      Engine: postgres
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBName: perabank
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      PubliclyAccessible: true
+      BackupRetentionPeriod: 0
+      StorageType: gp2
+      MultiAZ: false
+
+Outputs:
+  DBEndpoint:
+    Description: Endpoint de conexión a la base de datos
+    Value: !GetAtt RDSInstance.Endpoint.Address
+
+
+  RDSSecurityGroupId:
+    Description: ID del grupo de seguridad creado
+    Value: !Ref RDSSecurityGroup

@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Crear un bucket S3 para almacenar datos crudos del proyecto PeraBank
+
+Resources:
+  PeraBankS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: perabank-data-bucket-1634864163 # cámbialo por uno único
+
+Outputs:
+  BucketName:
+    Description: Nombre del bucket creado
+    Value: !Ref PeraBankS3Bucket
