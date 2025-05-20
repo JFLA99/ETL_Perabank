@@ -1,0 +1,38 @@
+# Entorno virtual
+venv/
+.env/
+
+# Archivos Python compilados
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de Jupyter Notebook
+.ipynb_checkpoints
+
+# Archivos de log
+*.log
+
+# Configuración de VS Code
+.vscode/
+
+# Archivos temporales de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de datasets procesados localmente
+data/outputs/
+
+# Archivos de configuración sensible
+*.env
+credentials.json
+
+# Archivos de pruebas
+*.pytest_cache/
+.pytest_cache/
+
+# Carpetas de paquetes o dependencias descargadas
+.eggs/
+*.egg-info/
+dist/
+build/
